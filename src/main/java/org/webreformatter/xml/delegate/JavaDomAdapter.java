@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.webreformatter.rdf.xml;
+package org.webreformatter.xml.delegate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,6 @@ import java.util.TreeMap;
 import org.webreformatter.ns.IId;
 import org.webreformatter.ns.IName;
 import org.webreformatter.ns.NamespaceManager;
-import org.webreformatter.xml.delegate.IDelegateAdapter;
 
 /**
  * @author kotelnikov

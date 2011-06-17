@@ -8,6 +8,7 @@ import org.webreformatter.xml.IXmlDocumentFactory;
 import org.webreformatter.xml.IXmlDocumentParser;
 import org.webreformatter.xml.delegate.DelegateDocumentFactory;
 import org.webreformatter.xml.delegate.IDelegateAdapter;
+import org.webreformatter.xml.delegate.JavaDomAdapter;
 import org.webreformatter.xml.sax.SaxDocumentParser;
 
 /**
