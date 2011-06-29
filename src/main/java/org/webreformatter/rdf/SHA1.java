@@ -78,8 +78,9 @@ public class SHA1 {
          */
         public int getNext() {
             if (fBufPos == fBufLen) {
-                if (fPos == fMessage.length())
+                if (fPos == fMessage.length()) {
                     return -1;
+                }
                 char c = fMessage.charAt(fPos++);
                 fBufPos = 0;
                 if (c < 128) {
@@ -114,14 +115,15 @@ public class SHA1 {
         return pos;
     }
 
-    private static void appendByteToBuf(StringBuffer buf, int val) {
+    private static void appendByteToBuf(StringBuilder buf, int val) {
         String str = Integer.toHexString(val & 0xFF);
-        if (str.length() < 2)
+        if (str.length() < 2) {
             buf.append('0');
+        }
         buf.append(str);
     }
 
-    private static void appendIntToBuf(StringBuffer buf, int val) {
+    public static void appendIntToBuf(StringBuilder buf, int val) {
         int i = 32;
         appendByteToBuf(buf, val >>> (i -= 8));
         appendByteToBuf(buf, val >>> (i -= 8));
@@ -134,11 +136,12 @@ public class SHA1 {
     }
 
     public static String toHex(int[] array) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
             String str = Integer.toHexString(array[i] & 0xFF);
-            if (str.length() < 2)
+            if (str.length() < 2) {
                 buf.append('0');
+            }
             buf.append(str);
         }
         return buf.toString();
@@ -227,6 +230,16 @@ public class SHA1 {
         }
     }
 
+    private void doUpdate(int value) {
+        fLength++;
+        int shift = fLength % 4;
+        fValue |= value << (32 - 8 * shift);
+        if (shift == 0) {
+            addToBuf(fValue);
+            fValue = 0;
+        }
+    }
+
     /**
      * 
      */
@@ -259,7 +272,7 @@ public class SHA1 {
 
     public String getDigestString() {
         finish();
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         appendIntToBuf(buf, fDigest[0]);
         appendIntToBuf(buf, fDigest[1]);
         appendIntToBuf(buf, fDigest[2]);
@@ -285,16 +298,16 @@ public class SHA1 {
     public void update(IByteProvider iterator) {
         while (true) {
             int x = iterator.getNext();
-            if (x < 0)
+            if (x < 0) {
                 break;
-            fLength++;
-            int shift = fLength % 4;
-            fValue |= x << (32 - 8 * shift);
-            if (shift == 0) {
-                addToBuf(fValue);
-                fValue = 0;
             }
+            doUpdate(x);
         }
+    }
+
+    public void update(int value) {
+        value = value & 0xFF;
+        doUpdate(value);
     }
 
     public void update(String msg) {
