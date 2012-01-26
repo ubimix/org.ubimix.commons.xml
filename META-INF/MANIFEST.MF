@@ -7,18 +7,5 @@ Bundle-Version: 1.1.5
 Bundle-ManifestVersion: 2
 Bundle-Description: JSON Library
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
-Export-Package: org.webreformatter.atom;version="1.1.5",
- org.webreformatter.ns;version="1.1.5",
- org.webreformatter.path;version="1.1.5",
- org.webreformatter.path.rdf;version="1.1.5",
- org.webreformatter.path.xml;version="1.1.5",
- org.webreformatter.rdf;version="1.1.5",
- org.webreformatter.rdf.parser;version="1.1.5",
- org.webreformatter.rdf.xml;version="1.1.5",
- org.webreformatter.template;version="1.1.5",
- org.webreformatter.xml;version="1.1.5",
- org.webreformatter.xml.basic;version="1.1.5",
- org.webreformatter.xml.delegate;version="1.1.5",
- org.webreformatter.xml.delegate.dom;version="1.1.5",
- org.webreformatter.xml.entities;version="1.1.5",
- org.webreformatter.xml.sax;version="1.1.5"
+Export-Package: org.webreformatter.commons.xml;version="1.1.5",
+ org.webreformatter.commons.xml.atom;version="1.1.5"
