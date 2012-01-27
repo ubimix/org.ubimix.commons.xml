@@ -5,7 +5,7 @@ Bundle-Name: org.webreformatter.commons.xml
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Version: 1.1.5
 Bundle-ManifestVersion: 2
-Bundle-Description: JSON Library
+Bundle-Description: XML Utilities Library
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
 Export-Package: org.webreformatter.commons.xml;version="1.1.5",
  org.webreformatter.commons.xml.atom;version="1.1.5"
