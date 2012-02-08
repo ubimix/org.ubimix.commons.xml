@@ -27,25 +27,9 @@ public class XmlTagExtractor {
         }
     }
 
-    public static abstract class HtmlElementAcceptor
+    public static abstract class HtmlElementAcceptor extends XHTMLUtils
         implements
         IElementAcceptor {
-
-        public static final String _NS_XHTML = "http://www.w3.org/1999/xhtml";
-
-        protected String getHTMLName(Element tag) {
-            String ns = tag.getNamespaceURI();
-            String name = null;
-            if (_NS_XHTML.equals(ns)) {
-                name = tag.getLocalName();
-            } else if (ns == null) {
-                name = tag.getNodeName();
-            }
-            if (name != null) {
-                name = name.toLowerCase();
-            }
-            return name;
-        }
 
     }
 
