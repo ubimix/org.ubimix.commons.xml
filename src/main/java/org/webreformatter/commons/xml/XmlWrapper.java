@@ -96,8 +96,10 @@ public class XmlWrapper {
          * @param context the context to add in the internal list
          */
         public void addContext(NamespaceContext context) {
-            if (!fContexts.contains(context)) {
-                fContexts.add(context);
+            synchronized (fContexts) {
+                if (!fContexts.contains(context)) {
+                    fContexts.add(context);
+                }
             }
         }
 
@@ -109,8 +111,10 @@ public class XmlWrapper {
          *        list
          */
         public void addContexts(NamespaceContext... contexts) {
-            for (NamespaceContext context : contexts) {
-                fContexts.add(context);
+            synchronized (fContexts) {
+                for (NamespaceContext context : contexts) {
+                    fContexts.add(context);
+                }
             }
         }
 
@@ -120,8 +124,10 @@ public class XmlWrapper {
          * @param namespaceContext
          */
         public void addContextsFrom(CompositeNamespaceContext namespaceContext) {
-            if (namespaceContext != null) {
-                fContexts.addAll(namespaceContext.fContexts);
+            synchronized (fContexts) {
+                if (namespaceContext != null) {
+                    fContexts.addAll(namespaceContext.fContexts);
+                }
             }
         }
 
@@ -130,10 +136,12 @@ public class XmlWrapper {
          */
         public String getNamespaceURI(String prefix) {
             String result = null;
-            for (NamespaceContext context : fContexts) {
-                result = context.getNamespaceURI(prefix);
-                if (result != null) {
-                    break;
+            synchronized (fContexts) {
+                for (NamespaceContext context : fContexts) {
+                    result = context.getNamespaceURI(prefix);
+                    if (result != null) {
+                        break;
+                    }
                 }
             }
             return result;
@@ -144,10 +152,12 @@ public class XmlWrapper {
          */
         public String getPrefix(String namespaceURI) {
             String result = null;
-            for (NamespaceContext context : fContexts) {
-                result = context.getPrefix(namespaceURI);
-                if (result != null) {
-                    break;
+            synchronized (fContexts) {
+                for (NamespaceContext context : fContexts) {
+                    result = context.getPrefix(namespaceURI);
+                    if (result != null) {
+                        break;
+                    }
                 }
             }
             return result;
@@ -158,13 +168,16 @@ public class XmlWrapper {
          */
         public Iterator<String> getPrefixes(String namespaceURI) {
             Set<String> prefixes = new LinkedHashSet<String>();
-            for (NamespaceContext context : fContexts) {
-                @SuppressWarnings("unchecked")
-                Iterator<String> iterator = context.getPrefixes(namespaceURI);
-                if (iterator != null) {
-                    while (iterator.hasNext()) {
-                        String prefix = iterator.next();
-                        prefixes.add(prefix);
+            synchronized (fContexts) {
+                for (NamespaceContext context : fContexts) {
+                    @SuppressWarnings("unchecked")
+                    Iterator<String> iterator = context
+                        .getPrefixes(namespaceURI);
+                    if (iterator != null) {
+                        while (iterator.hasNext()) {
+                            String prefix = iterator.next();
+                            prefixes.add(prefix);
+                        }
                     }
                 }
             }
@@ -177,7 +190,9 @@ public class XmlWrapper {
          * @param context the context to remove from the list
          */
         public void removeContext(NamespaceContext context) {
-            fContexts.remove(context);
+            synchronized (fContexts) {
+                fContexts.remove(context);
+            }
         }
 
     }
@@ -756,6 +771,8 @@ public class XmlWrapper {
             throws XmlException,
             IOException {
             Document doc = XmlWrapper.readXML(reader);
+            T wrapper = wrap(doc, type);
+            wrapper.toString();
             return wrap(doc, type);
         }
 
@@ -774,8 +791,8 @@ public class XmlWrapper {
         public <T extends XmlWrapper> T readXML(Class<T> type, String xml)
             throws XmlException,
             IOException {
-            Document doc = XmlWrapper.readXML(xml);
-            return wrap(doc, type);
+            StringReader reader = new StringReader(xml);
+            return readXML(type, reader);
         }
 
         /**
@@ -2304,6 +2321,45 @@ public class XmlWrapper {
     public Transformer getXslTransformer(Source xslSource) throws XmlException {
         URIResolver resolver = fContext.getURIResolver();
         return getXslTransformer(xslSource, resolver);
+    }
+
+    /**
+     * Inserts the specified node before an existing node and returns a wrapper
+     * for this new child.
+     * 
+     * @param child an existing child
+     * @param newChild a new child node
+     * @param type the type of the wrapper to apply
+     * @return a wrapper for the new child node
+     * @throws XmlException
+     */
+    public XmlWrapper insertBefore(XmlWrapper child, XmlWrapper newChild)
+        throws XmlException {
+        return insertBefore(child, newChild, XmlWrapper.class);
+    }
+
+    /**
+     * Inserts the specified node before an existing node and returns a wrapper
+     * for this new child.
+     * 
+     * @param child an existing child
+     * @param newChild a new child node
+     * @param type the type of the wrapper to apply
+     * @return a wrapper for the new child node
+     * @throws XmlException
+     */
+    public <T extends XmlWrapper> T insertBefore(
+        XmlWrapper child,
+        XmlWrapper newChild,
+        Class<T> type) throws XmlException {
+        Node root = getRootNode();
+        Node childNode = child.getRootNode();
+        Node newChildNode = newChild.getRootNode();
+        Document doc = root.getOwnerDocument();
+        newChildNode = doc.adoptNode(newChildNode);
+        root.insertBefore(newChildNode, childNode);
+        T result = fContext.wrap(newChildNode, type);
+        return result;
     }
 
     /**

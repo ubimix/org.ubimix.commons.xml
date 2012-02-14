@@ -12,6 +12,22 @@ import java.util.Set;
 import org.w3c.dom.Element;
 
 /**
+ * This class allows to retrieve specific XML elements from a range of an XML
+ * document. For example it could be useful to get all lists between two
+ * headers.
+ * 
+ * <pre>
+ * This class allows extract tags between two headers ("First section" and 
+ * "Sub-section") even if they are not at the same level: 
+ *      &lt;body>
+ *          &lt;p>Introduction...&lt;/p>
+ *          &lt;div class='title'>&lt;h1>First section&lt;/h1>&lt;/div>
+ *          &lt;ul>&lt;li>item 1&lt;/li>&lt;li>item 2&lt;/li>&lt;/ul>
+ *          &lt;div class='title'>&lt;h2>Sub-section&lt;/h2>&lt;/div>
+ *          &lt;p>Content of the the sub-section&lt;/p>
+ *      &lt;/body>
+ * </pre>
+ * 
  * @author kotelnikov
  */
 public class XmlTagExtractor {
