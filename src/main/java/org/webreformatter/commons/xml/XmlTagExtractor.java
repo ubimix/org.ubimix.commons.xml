@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * This class allows to retrieve specific XML elements from a range of an XML
@@ -86,6 +87,59 @@ public class XmlTagExtractor {
         };
 
         boolean accept(Element element);
+    }
+
+    /**
+     * @author kotelnikov
+     */
+    public static class RangeExtractor {
+
+        public static List<Element> getContentBetweetTags(
+            Element element,
+            final Element beginElement,
+            Element endElement) {
+            IElementAcceptor beginAcceptor = beginElement != null
+                ? new SimpleElementAcceptor(beginElement)
+                : IElementAcceptor.YES_ACCEPTOR;
+            IElementAcceptor endAcceptor = endElement != null
+                ? new SimpleElementAcceptor(endElement)
+                : IElementAcceptor.NO_ACCEPTOR;
+            final Set<Node> endParents = getElementWithParents(endElement);
+            IElementAcceptor elementAcceptor = new IElementAcceptor() {
+                public boolean accept(Element element) {
+                    if (endParents.contains(element)) {
+                        return false;
+                    }
+                    if (beginElement != null) {
+                        Set<Node> parents = getElementWithParents(element);
+                        if (parents.contains(beginElement)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            };
+            XmlTagExtractor extractor = new XmlTagExtractor();
+            List<Element> list = extractor.loadElements(
+                element,
+                elementAcceptor,
+                beginAcceptor,
+                endAcceptor);
+            return list;
+        }
+
+        private static Set<Node> getElementWithParents(Element e) {
+            Set<Node> result = new HashSet<Node>();
+            if (e != null) {
+                Node node = e;
+                while (node != null) {
+                    result.add(node);
+                    node = node.getParentNode();
+                }
+            }
+            return result;
+        }
+
     }
 
     public static class SimpleElementAcceptor implements IElementAcceptor {
