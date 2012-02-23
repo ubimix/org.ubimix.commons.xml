@@ -2,7 +2,7 @@ package org.webreformatter.commons.xml.atom;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * This class contains utility methods used to transform dates
@@ -12,6 +12,9 @@ import java.util.Locale;
  */
 public class DateUtil {
 
+    // "yyyy.MM.dd G 'at' HH:mm:ss z" 2001.07.04 AD at 12:08:56 PDT
+    private static SimpleDateFormat DATE_FORMAT = newDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
     /**
      * One day in milliseconds.
      */
@@ -20,7 +23,11 @@ public class DateUtil {
     /**
      * Date-time formats
      */
-    private final static SimpleDateFormat[] FORMATS;
+    private final static SimpleDateFormat[] FORMATS = newDateFormats(
+        "yyyy-MM-dd'T'HH:mm:ss'Z'",
+        "EEE, d MMM yyyy HH:mm:ss z",
+        "EEE, d MMM yyyy HH:mm:ss Z",
+        "EEE, d MMM yyyy HH:mm:ss");
 
     /**
      * One hour in milliseconds.
@@ -44,18 +51,16 @@ public class DateUtil {
         HOUR = MIN * 60;
         DAY = HOUR * 24;
 
-        // Examples: // Wed, 30 Dec 2009 21:38:03 GMT
-        String[] templates = {
-            "EEE, d MMM yyyy HH:mm:ss z",
-            "EEE, d MMM yyyy HH:mm:ss Z",
-            "EEE, d MMM yyyy HH:mm:ss" };
-        FORMATS = new SimpleDateFormat[templates.length];
-        int i = 0;
-        Locale locale = Locale.US;
-        for (String template : templates) {
-            SimpleDateFormat format = new SimpleDateFormat(template, locale);
-            FORMATS[i++] = format;
-        }
+    }
+
+    /**
+     * Returns the string representation of the specified date.
+     * 
+     * @param date the date to format
+     * @return the string representation of the specified date.
+     */
+    public static String formatDate(Date date) {
+        return DATE_FORMAT.format(date);
     }
 
     /**
@@ -65,7 +70,22 @@ public class DateUtil {
      * @return the string representation of the specified date.
      */
     public static String formatDate(long date) {
-        return FORMATS[0].format(date);
+        return DATE_FORMAT.format(date);
+    }
+
+    public static SimpleDateFormat newDateFormat(String template) {
+        SimpleDateFormat format = new SimpleDateFormat(template);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format;
+    }
+
+    public static SimpleDateFormat[] newDateFormats(String... templates) {
+        SimpleDateFormat[] result = new SimpleDateFormat[templates.length];
+        int i = 0;
+        for (String template : templates) {
+            result[i++] = newDateFormat(template);
+        }
+        return result;
     }
 
     /**

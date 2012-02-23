@@ -26,14 +26,26 @@ public class AtomCategory extends AtomItem {
     }
 
     public String getLabel() throws XmlException {
-        return evalStr("@label");
+        return getAttribute("label");
     }
 
     public String getScheme() throws XmlException {
-        return evalStr("@scheme");
+        return getAttribute("scheme");
     }
 
     public String getTerm() throws XmlException {
-        return evalStr("@term");
+        return getAttribute("term");
+    }
+
+    public void setLabel(String value) {
+        setAttribute("label", value);
+    }
+
+    public void setScheme(String value) {
+        setAttribute("scheme", value);
+    }
+
+    public void setTerm(String value) {
+        setAttribute("term", value);
     }
 }

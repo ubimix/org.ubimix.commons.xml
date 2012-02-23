@@ -29,6 +29,13 @@ public class AtomEntry extends AtomItem {
         super(wrapper);
     }
 
+    public AtomCategory addCategory() throws XmlException {
+        AtomCategory category = appendElement(
+            "atom:category",
+            AtomCategory.class);
+        return category;
+    }
+
     protected XmlWrapper appendChildren(
         String name,
         XmlWrapper tag,
@@ -187,6 +194,17 @@ public class AtomEntry extends AtomItem {
         node.setAttribute("href", link);
     }
 
+    public XmlWrapper setSummary(String summary) throws XmlException {
+        return appendContent("atom:summary", summary, true);
+    }
+
+    public XmlWrapper setSummaryAsXml(String content)
+        throws XmlException,
+        IOException {
+        XmlWrapper tag = getXmlContext().readXML(content);
+        return appendTag("atom:summary", tag, true);
+    }
+
     public XmlWrapper setTitle(String title) throws XmlException {
         return appendContent("atom:title", title, true);
     }
@@ -194,6 +212,10 @@ public class AtomEntry extends AtomItem {
     public XmlWrapper setTitle(XmlWrapper titleContent) throws XmlException {
         String str = titleContent.toText();
         return setTitle(str);
+    }
+
+    public XmlWrapper setUpdated(Date date) throws XmlException {
+        return appendContent("atom:updated", DateUtil.formatDate(date), true);
     }
 
 }

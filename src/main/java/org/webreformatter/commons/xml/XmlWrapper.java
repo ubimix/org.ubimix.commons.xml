@@ -2067,7 +2067,7 @@ public class XmlWrapper {
      */
     public String getAttribute(String attrName) {
         Element e = getRootElement();
-        return e.getAttribute(attrName);
+        return e.hasAttribute(attrName) ? e.getAttribute(attrName) : null;
     }
 
     /**
@@ -2151,8 +2151,8 @@ public class XmlWrapper {
      * @return the next element sibling for this node.
      * @throws XmlException
      */
-    public XmlWrapper getNextElement() throws XmlException {
-        return getNextElement(XmlWrapper.class);
+    public XmlWrapper getNext() throws XmlException {
+        return getNext(XmlWrapper.class);
     }
 
     /**
@@ -2161,8 +2161,7 @@ public class XmlWrapper {
      * @return the next element sibling for this node.
      * @throws XmlException
      */
-    public <T extends XmlWrapper> T getNextElement(Class<T> type)
-        throws XmlException {
+    public <T extends XmlWrapper> T getNext(Class<T> type) throws XmlException {
         Element element = getRootElement();
         if (element == null) {
             return null;
@@ -2261,6 +2260,59 @@ public class XmlWrapper {
             return null;
         }
         T result = getXmlContext().wrap(parent, type);
+        return result;
+    }
+
+    /**
+     * Returns the previous element sibling for this node.
+     * 
+     * @return the previous element sibling for this node.
+     * @throws XmlException
+     */
+    public XmlWrapper getPrevious() throws XmlException {
+        return getPrevious(XmlWrapper.class);
+    }
+
+    /**
+     * Returns the previous element sibling for this node.
+     * 
+     * @return the previous element sibling for this node.
+     * @throws XmlException
+     */
+    public <T extends XmlWrapper> T getPrevious(Class<T> type)
+        throws XmlException {
+        Element element = getRootElement();
+        if (element == null) {
+            return null;
+        }
+        Node start = element.getPreviousSibling();
+        return getPreviousElementWrapper(type, start);
+    }
+
+    /**
+     * Searches then next element sibling of the specified node and returns a
+     * wrapper object of the specified type for the found element.
+     * 
+     * @param type the type of the wrapper to apply for the found element
+     * @param start the start XML node
+     * @return a wrapper of the specified for the next element sibling for the
+     *         specified node
+     * @throws XmlException
+     */
+    protected <T extends XmlWrapper> T getPreviousElementWrapper(
+        Class<T> type,
+        Node start) throws XmlException {
+        Element resultElement = null;
+        for (Node node = start; node != null; node = node.getPreviousSibling()) {
+            if (node instanceof Element) {
+                resultElement = (Element) node;
+                break;
+            }
+        }
+        T result = null;
+        if (resultElement != null) {
+            result = getXmlContext().wrap(resultElement, type);
+        }
         return result;
     }
 
@@ -2636,4 +2688,5 @@ public class XmlWrapper {
         String result = writer.toString();
         return result;
     }
+
 }
