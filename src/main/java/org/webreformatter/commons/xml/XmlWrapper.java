@@ -918,16 +918,19 @@ public class XmlWrapper {
         XmlWrapper container,
         XmlWrapper node,
         boolean copy) throws XmlException {
-        XmlWrapper child = node != null ? node.getFirstElement() : null;
-        if (child == null) {
+        Node rootElement = node.getRootNode();
+        if (rootElement == null) {
+            return;
+        }
+        Node childNode = rootElement.getFirstChild();
+        if (childNode == null) {
             return;
         }
         List<Node> list = new ArrayList<Node>();
-        Node childNode = child.getRoot();
         while (childNode != null) {
             if (copy) {
-                Node n = childNode.cloneNode(true);
-                list.add(n);
+                Node nodeClone = childNode.cloneNode(true);
+                list.add(nodeClone);
             } else {
                 list.add(childNode);
             }
