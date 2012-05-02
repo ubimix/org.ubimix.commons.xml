@@ -197,20 +197,29 @@ public class HtmlBurner {
 
         @Override
         public String toString() {
-            return "fBlockElements="
+            return "{\n"
+                + "  \"blockElements\":"
                 + fBlockElements
-                + "; fInlineElements="
+                + ",\n"
+                + "  \"inlineElements\":"
                 + fInlineElements
-                + "; fLineBreakElements="
+                + ",\n"
+                + "  \"lineBreakElements\":"
                 + fLineBreakElements
-                + "; fOtherXmlNodes="
+                + ",\n"
+                + "  \"otherXmlNodes\":"
                 + fOtherXmlNodes
-                + "; fSpaceBlocks="
+                + ",\n"
+                + "  \"spaceBlocks\":"
                 + fSpaceBlocks
-                + "; fTextBlocks="
+                + ",\n"
+                + "  \"textBlocks\":"
                 + fTextBlocks
-                + "; fXmlElements="
-                + fXmlElements;
+                + ",\n"
+                + "  \"xmlElements\":"
+                + fXmlElements
+                + "\n"
+                + "}";
         }
 
         private void updateStat(Node child) {
@@ -246,7 +255,7 @@ public class HtmlBurner {
     }
 
     private static String getHtmlName(Attr attr) {
-        return attr.getLocalName();
+        return XHTMLUtils.getHTMLName(attr);
     }
 
     private static String getHtmlName(Element e) {
