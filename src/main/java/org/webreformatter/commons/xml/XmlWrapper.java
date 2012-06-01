@@ -1223,7 +1223,7 @@ public class XmlWrapper {
      * @return a new document builder
      * @throws ParserConfigurationException
      */
-    private static DocumentBuilder getDocumentBuilder() throws XmlException {
+    public static DocumentBuilder getDocumentBuilder() throws XmlException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory
                 .newInstance();
