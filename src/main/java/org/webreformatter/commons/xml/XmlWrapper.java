@@ -772,8 +772,7 @@ public class XmlWrapper {
             IOException {
             Document doc = XmlWrapper.readXML(reader);
             T wrapper = wrap(doc, type);
-            wrapper.toString();
-            return wrap(doc, type);
+            return wrapper;
         }
 
         /**
