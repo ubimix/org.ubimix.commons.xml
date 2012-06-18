@@ -323,6 +323,18 @@ public class XmlWrapper {
         }
 
         /**
+         * Adds a new mapping between the specified namespace prefix and the
+         * corresponding namespace URI.
+         * 
+         * @param prefix a new prefix for the given namespace
+         * @param namespaceUri the namespace URI
+         */
+        public void addNamespacePrefix(String prefix, String namespaceUri) {
+            fNamespaceToPrefix.put(namespaceUri, prefix);
+            fPrefixToNamespace.put(prefix, namespaceUri);
+        }
+
+        /**
          * @see javax.xml.namespace.NamespaceContext#getNamespaceURI(java.lang.String)
          */
         public String getNamespaceURI(String prefix) {
@@ -467,7 +479,7 @@ public class XmlWrapper {
      * {@link XmlWrapper} objects. They provide access to namespaces (used to
      * build XPath expressions) and to a {@link URIResolver} instance (used to
      * perform XSL transformations). Note that this object is immutable and
-     * should be created using a builder instance
+     * should be created using a builder instancehtml:
      * {@link XmlWrapper.XmlContext.Builder}.
      * <p>
      * Example of usage of this class:
@@ -710,8 +722,8 @@ public class XmlWrapper {
                         if (namespaceContext != null) {
                             compiledXpath.setNamespaceContext(namespaceContext);
                         }
-                        expr = compiledXpath.compile(xpath);
                         fXPathCache.put(xpath, expr);
+                        expr = compiledXpath.compile(xpath);
                     }
                     return expr;
                 } catch (Throwable t) {
