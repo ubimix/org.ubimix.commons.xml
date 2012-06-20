@@ -911,7 +911,7 @@ public class XmlWrapper {
      */
     protected static void append(Node target, Node node) {
         Document targetDoc = getDocument(target);
-        targetDoc.adoptNode(node);
+        node = targetDoc.adoptNode(node);
         target.appendChild(node);
     }
 
@@ -1865,6 +1865,21 @@ public class XmlWrapper {
     }
 
     /**
+     * Copies all child nodes of this element in the target element.
+     * 
+     * @param target the target XML element where all children should be copied.
+     */
+    public void copyTo(XmlWrapper target) {
+        Node root = getRootElement();
+        Element tagElement = target.getRootElement();
+        Node child = root.getFirstChild();
+        while (child != null) {
+            copyNode(tagElement, child);
+            child = child.getNextSibling();
+        }
+    }
+
+    /**
      * This method creates and returns a new copy of this XML.
      * 
      * @return a new wrapper instance containing a copy of this node
@@ -2456,6 +2471,35 @@ public class XmlWrapper {
     }
 
     /**
+     * Creates and returns a new copy of this element but changes the tag name
+     * by the specified one; it creates a copy of the underlying XML nodes.
+     * 
+     * @param tagName name of the copy tag
+     * @param type the type of the resulting wrapper object
+     * @return a new copy of this XML object of a specified type
+     * @throws XmlException
+     */
+    public XmlWrapper newCopy(String tagName) throws XmlException {
+        return newCopy(tagName, XmlWrapper.class);
+    }
+
+    /**
+     * Creates and returns a new copy of this element but changes the tag name
+     * by the specified one; it creates a copy of the underlying XML nodes.
+     * 
+     * @param tagName name of the copy tag
+     * @param type the type of the resulting wrapper object
+     * @return a new copy of this XML object of a specified type
+     * @throws XmlException
+     */
+    public <T extends XmlWrapper> T newCopy(String tagName, Class<T> type)
+        throws XmlException {
+        T tag = fContext.newXML(tagName, type);
+        copyTo(tag);
+        return tag;
+    }
+
+    /**
      * Removes this node from the parent document.
      */
     public void remove() {
@@ -2493,6 +2537,16 @@ public class XmlWrapper {
                     + "'.",
                 t);
         }
+    }
+
+    /**
+     * Removes the specified attribute from this element.
+     * 
+     * @param attrName the qualified name of the attribute
+     * @return reference to this object
+     */
+    public XmlWrapper removeAttribute(String attrName) {
+        return setAttribute(attrName, null);
     }
 
     /**
@@ -2617,7 +2671,11 @@ public class XmlWrapper {
             QName qName = getQualifiedName(namespaceContext, attrName);
             qualifiedName = serializeQualifiedName(qName);
         }
-        element.setAttribute(qualifiedName, value);
+        if (value != null) {
+            element.setAttribute(qualifiedName, value);
+        } else {
+            element.removeAttribute(qualifiedName);
+        }
         return this;
     }
 
