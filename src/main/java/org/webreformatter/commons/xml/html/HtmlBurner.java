@@ -23,21 +23,21 @@ public class HtmlBurner {
 
     public static class HtmlBurnerConfig implements IHtmlBurnerConfig {
 
-        public boolean isExcludedAttribute(String name) {
+        public boolean isExcludedAttribute(String name, Attr attr) {
             name = name.toLowerCase();
             return TagDictionary.isHtmlAttribute(name)
                 && !TagDictionary.isImportantAttribute(name)
                 || name.startsWith("on");
         }
 
-        public boolean isExcludedContainer(String name) {
+        public boolean isExcludedContainer(String name, Element element) {
             return TagDictionary.isFormElement(name)
                 || "font".equals(name)
                 || "center".equals(name)
                 || TagDictionary.BODY.equals(name);
         }
 
-        public boolean isExcludedTag(String name) {
+        public boolean isExcludedTag(String name, Element element) {
             return TagDictionary.HEAD.equals(name)
                 || TagDictionary.isFormElement(name)
                 || TagDictionary.isFormContentElement(name)
@@ -49,7 +49,7 @@ public class HtmlBurner {
                 || TagDictionary.STYLE.equals(name);
         }
 
-        public boolean removeElementsWithIds() {
+        public boolean keepIntact(String name, Element element) {
             return false;
         }
 
@@ -57,13 +57,13 @@ public class HtmlBurner {
 
     public interface IHtmlBurnerConfig {
 
-        boolean isExcludedAttribute(String name);
+        boolean isExcludedAttribute(String name, Attr attr);
 
-        boolean isExcludedContainer(String name);
+        boolean isExcludedContainer(String name, Element element);
 
-        boolean isExcludedTag(String name);
+        boolean isExcludedTag(String name, Element element);
 
-        boolean removeElementsWithIds();
+        boolean keepIntact(String name, Element element);
 
     }
 
@@ -351,7 +351,7 @@ public class HtmlBurner {
             } else if (node instanceof Element) {
                 Element childTag = (Element) node;
                 String childName = getHtmlName(childTag);
-                if (!fConfig.isExcludedTag(childName)) {
+                if (!fConfig.isExcludedTag(childName, childTag)) {
                     Text text = flushText(tag, buf);
                     if (text != null) {
                         result.add(text);
@@ -362,7 +362,9 @@ public class HtmlBurner {
                         continue;
                     }
                     // Special cases
-                    if (fConfig.isExcludedContainer(childName)) {
+                    if (fConfig.keepIntact(childName, childTag)) {
+                        result.add(childTag);
+                    } else if (fConfig.isExcludedContainer(childName, childTag)) {
                         List<Node> childList = getChildren(childTag);
                         childList = burnNodes(tag, childList, keepSpaces);
                         result.addAll(childList);
@@ -632,10 +634,10 @@ public class HtmlBurner {
 
     private void removeUnusedAttributes(Element e) {
         NamedNodeMap attributes = e.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
+        for (int i = attributes.getLength() - 1; i >= 0; i--) {
             Attr attr = (Attr) attributes.item(i);
             String name = getHtmlName(attr);
-            if (fConfig.isExcludedAttribute(name)) {
+            if (fConfig.isExcludedAttribute(name, attr)) {
                 e.removeAttributeNode(attr);
             }
         }
