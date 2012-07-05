@@ -95,7 +95,7 @@ public class HtmlBurnerTest extends TestCase {
             + "<p> A B C "
             + "<a href=\"http://foo.bar/titi/toto\">E</a> "
             + "<br/> "
-            + "<img alt=\"X\" src=\"http://foo.bar/photo/myphoto.jpg\" "
+            + "<img src=\"http://foo.bar/photo/myphoto.jpg\" "
             + "title=\"X\"/> "
             + "<br/>F </p>\n"
             + "</div>"
@@ -264,7 +264,7 @@ public class HtmlBurnerTest extends TestCase {
                 + "<div>\n"
                 + "    <p> Vos annonces </p>\n"
                 + "    <div>\n"
-                + "        <p> <a href=\"http://petites-annonces.liberation.fr/\"> <img class=\"visual\" src=\"http://m0.libe.com/libepartnerships/businesspartner_photo/2011/07/23/visuel_PA-1.png\"/> </a> </p>\n"
+                + "        <p> <a href=\"http://petites-annonces.liberation.fr/\"> <img src=\"http://m0.libe.com/libepartnerships/businesspartner_photo/2011/07/23/visuel_PA-1.png\"/> </a> </p>\n"
                 + "        <p> <a href=\"http://petites-annonces.liberation.fr/\"> <strong>Passez votre annonce dans Libération</strong> </a> </p>\n"
                 + "    </div>\n"
                 + "</div>");

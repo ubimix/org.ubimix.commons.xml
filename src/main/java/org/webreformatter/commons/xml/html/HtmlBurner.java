@@ -25,9 +25,20 @@ public class HtmlBurner {
 
         public boolean isExcludedAttribute(String name, Attr attr) {
             name = name.toLowerCase();
-            return TagDictionary.isHtmlAttribute(name)
-                && !TagDictionary.isImportantAttribute(name)
-                || name.startsWith("on");
+            if (name.startsWith("on")) {
+                // Remove all handlers
+                return true;
+            }
+            if (TagDictionary.isImportantAttribute(name)) {
+                // Keep important HTML attributes
+                return false;
+            }
+            if (TagDictionary.isHtmlAttribute(name)) {
+                // Remove all non-important HTML attributes
+                return true;
+            }
+            // Remove other attributes
+            return true;
         }
 
         public boolean isExcludedContainer(String name, Element element) {
