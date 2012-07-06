@@ -21,63 +21,6 @@ import org.webreformatter.commons.xml.XHTMLUtils;
  */
 public class HtmlBurner {
 
-    public static class HtmlBurnerConfig implements IHtmlBurnerConfig {
-
-        public boolean isExcludedAttribute(String name, Attr attr) {
-            name = name.toLowerCase();
-            if (name.startsWith("on")) {
-                // Remove all handlers
-                return true;
-            }
-            if (TagDictionary.isImportantAttribute(name)) {
-                // Keep important HTML attributes
-                return false;
-            }
-            if (TagDictionary.isHtmlAttribute(name)) {
-                // Remove all non-important HTML attributes
-                return true;
-            }
-            // Remove other attributes
-            return true;
-        }
-
-        public boolean isExcludedContainer(String name, Element element) {
-            return TagDictionary.isFormElement(name)
-                || "font".equals(name)
-                || "center".equals(name)
-                || TagDictionary.BODY.equals(name);
-        }
-
-        public boolean isExcludedTag(String name, Element element) {
-            return TagDictionary.HEAD.equals(name)
-                || TagDictionary.isFormElement(name)
-                || TagDictionary.isFormContentElement(name)
-                || TagDictionary.IFRAME.equals(name)
-                || TagDictionary.LABEL.equals(name)
-                || TagDictionary.NOSCRIPT.equals(name)
-                || TagDictionary.OPTION.equals(name)
-                || TagDictionary.SCRIPT.equals(name)
-                || TagDictionary.STYLE.equals(name);
-        }
-
-        public boolean keepIntact(String name, Element element) {
-            return false;
-        }
-
-    }
-
-    public interface IHtmlBurnerConfig {
-
-        boolean isExcludedAttribute(String name, Attr attr);
-
-        boolean isExcludedContainer(String name, Element element);
-
-        boolean isExcludedTag(String name, Element element);
-
-        boolean keepIntact(String name, Element element);
-
-    }
-
     /**
      * @author kotelnikov
      */
@@ -291,17 +234,7 @@ public class HtmlBurner {
         return result;
     }
 
-    private IHtmlBurnerConfig fConfig;
-
     public HtmlBurner() {
-        this(new HtmlBurnerConfig());
-    }
-
-    /**
-     * 
-     */
-    public HtmlBurner(IHtmlBurnerConfig config) {
-        fConfig = config;
     }
 
     public void burnHtml(Element tag) {
@@ -362,7 +295,7 @@ public class HtmlBurner {
             } else if (node instanceof Element) {
                 Element childTag = (Element) node;
                 String childName = getHtmlName(childTag);
-                if (!fConfig.isExcludedTag(childName, childTag)) {
+                if (!isExcludedTag(childName, childTag)) {
                     Text text = flushText(tag, buf);
                     if (text != null) {
                         result.add(text);
@@ -373,9 +306,9 @@ public class HtmlBurner {
                         continue;
                     }
                     // Special cases
-                    if (fConfig.keepIntact(childName, childTag)) {
+                    if (keepIntact(childName, childTag)) {
                         result.add(childTag);
-                    } else if (fConfig.isExcludedContainer(childName, childTag)) {
+                    } else if (isExcludedContainer(childName, childTag)) {
                         List<Node> childList = getChildren(childTag);
                         childList = burnNodes(tag, childList, keepSpaces);
                         result.addAll(childList);
@@ -591,6 +524,43 @@ public class HtmlBurner {
         return tag.hasAttribute(TagDictionary.ATTR_ID);
     }
 
+    protected boolean isExcludedAttribute(String name, Attr attr) {
+        name = name.toLowerCase();
+        if (name.startsWith("on")) {
+            // Remove all handlers
+            return true;
+        }
+        if (TagDictionary.isImportantAttribute(name)) {
+            // Keep important HTML attributes
+            return false;
+        }
+        if (TagDictionary.isHtmlAttribute(name)) {
+            // Remove all non-important HTML attributes
+            return true;
+        }
+        // Remove other attributes
+        return true;
+    }
+
+    protected boolean isExcludedContainer(String name, Element element) {
+        return TagDictionary.isFormElement(name)
+            || "font".equals(name)
+            || "center".equals(name)
+            || TagDictionary.BODY.equals(name);
+    }
+
+    protected boolean isExcludedTag(String name, Element element) {
+        return TagDictionary.HEAD.equals(name)
+            || TagDictionary.isFormElement(name)
+            || TagDictionary.isFormContentElement(name)
+            || TagDictionary.IFRAME.equals(name)
+            || TagDictionary.LABEL.equals(name)
+            || TagDictionary.NOSCRIPT.equals(name)
+            || TagDictionary.OPTION.equals(name)
+            || TagDictionary.SCRIPT.equals(name)
+            || TagDictionary.STYLE.equals(name);
+    }
+
     private boolean isTextflowContainer(Element tag) {
         String name = getHtmlName(tag);
         if (!TagDictionary.isHtmlElement(name)) {
@@ -599,6 +569,19 @@ public class HtmlBurner {
         }
         boolean result = TagDictionary.isTextflowContainer(name)
             || TagDictionary.isInlineElement(name);
+        return result;
+    }
+
+    protected boolean isTextflowElement(Element e) {
+        String name = getHtmlName(e);
+        boolean result;
+        if (!TagDictionary.isHtmlElement(name)) {
+            // No HTML name means that it is a simple XML node.
+            // A simple XML node can appear between in-line elements.
+            result = true;
+        } else {
+            result = TagDictionary.isInlineElement(name);
+        }
         return result;
     }
 
@@ -611,15 +594,13 @@ public class HtmlBurner {
         }
         boolean result = false;
         if (node instanceof Element) {
-            String name = getHtmlName((Element) node);
-            if (!TagDictionary.isHtmlElement(name)) {
-                // No HTML name means that is a simple XML node.
-                // A simple XML node can appear between in-line elements.
-                return true;
-            }
-            result = TagDictionary.isInlineElement(name);
+            result = isTextflowElement((Element) node);
         }
         return result;
+    }
+
+    protected boolean keepIntact(String name, Element element) {
+        return false;
     }
 
     private Element newHtmlElement(Node node, String tagName) {
@@ -643,12 +624,12 @@ public class HtmlBurner {
         }
     }
 
-    private void removeUnusedAttributes(Element e) {
+    protected void removeUnusedAttributes(Element e) {
         NamedNodeMap attributes = e.getAttributes();
         for (int i = attributes.getLength() - 1; i >= 0; i--) {
             Attr attr = (Attr) attributes.item(i);
             String name = getHtmlName(attr);
-            if (fConfig.isExcludedAttribute(name, attr)) {
+            if (isExcludedAttribute(name, attr)) {
                 e.removeAttributeNode(attr);
             }
         }
