@@ -300,15 +300,20 @@ public class HtmlBurner {
                     if (text != null) {
                         result.add(text);
                     }
-                    TagStat childStat = burnTag(childTag, keepSpaces);
-                    if (keepSpaces) {
-                        result.add(childTag);
-                        continue;
-                    }
-                    // Special cases
+                    TagStat childStat = null;
                     if (keepIntact(childName, childTag)) {
                         result.add(childTag);
-                    } else if (isExcludedContainer(childName, childTag)) {
+                        continue;
+                    } else {
+                        childStat = burnTag(childTag, keepSpaces);
+                        if (keepSpaces) {
+                            result.add(childTag);
+                            continue;
+                        }
+                    }
+
+                    // Special cases
+                    if (isExcludedContainer(childName, childTag)) {
                         List<Node> childList = getChildren(childTag);
                         childList = burnNodes(tag, childList, keepSpaces);
                         result.addAll(childList);

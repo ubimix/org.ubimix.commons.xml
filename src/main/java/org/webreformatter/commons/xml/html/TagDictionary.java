@@ -118,6 +118,9 @@ public class TagDictionary {
     /** Defines the document's body */
     public static final String BODY = "body";
 
+    // The full list of all elements available in the body.
+    public static final Set<String> BODY_CONTENT_ELEMENTS = new HashSet<String>();
+
     /** Defines a single line break */
     public static final String BR = "br";
 
@@ -462,117 +465,6 @@ public class TagDictionary {
     public static final String WBR = "wbr";
 
     static {
-        HEADERS.add(H1);
-        HEADERS.add(H2);
-        HEADERS.add(H3);
-        HEADERS.add(H4);
-        HEADERS.add(H5);
-        HEADERS.add(H6);
-
-        BLOCK_ELEMENTS.addAll(HEADERS);
-        BLOCK_ELEMENTS.addAll(Arrays.asList(
-        // New (HTML5)
-            ARTICLE,
-            ASIDE,
-            DETAILS,
-            FIGCAPTION,
-            FIGURE,
-            FOOTER,
-            HEADER,
-            KEYGEN,
-            NAV,
-            OUTPUT,
-            SECTION,
-            SUMMARY,
-            // Old
-            BLOCKQUOTE,
-            DIV,
-            DL,
-            FIELDSET,
-            LEGEND,
-            HR,
-            IFRAME,
-            OL,
-            P,
-            PRE,
-            UL,
-            TABLE));
-
-        BLOCK_CONTAINER_ELEMENTS.addAll(Arrays.asList(
-        // New (HTML5)
-            FIGURE,
-            FOOTER,
-            HEADER,
-            NAV,
-            SECTION,
-            SUMMARY,
-            // Old
-            BLOCKQUOTE,
-            DIV,
-            DD,
-            FIELDSET,
-            LI,
-            PRE,
-            TD,
-            TH));
-
-        NON_CONTENT_ELEMENTS.addAll(Arrays.asList(
-            BUTTON,
-            FORM,
-            FRAME,
-            HEAD,
-            IFRAME,
-            INPUT,
-            OPTION,
-            SELECT,
-            SCRIPT,
-            STYLE,
-            TEXTAREA));
-        EMPTY_ELEMENTS.addAll(Arrays.asList(HR, IMG, BR));
-
-        INLINE_ELEMENTS.addAll(Arrays.asList(
-            A,
-            B,
-            BR,
-            EM,
-            STRONG,
-            I,
-            IMG,
-            SPAN,
-            SUB,
-            SUP,
-
-            /* HTML 5 */
-            AUDIO,
-            MARK,
-            PROGRESS,
-            RUBY, /* ? */
-            TIME,
-            TRACK,
-            VIDEO, /* ? */
-            WBR));
-
-        ALL_ATTRIBUTES.addAll(Arrays.asList(
-            ATTR_ALIGN,
-            ATTR_ALT,
-            ATTR_BACKGROUND,
-            ATTR_BGCOLOR,
-            ATTR_BORDER,
-            ATTR_CELLPADDING,
-            ATTR_CELLSPACING,
-            ATTR_CLASS,
-            ATTR_COLOR,
-            ATTR_FACE,
-            ATTR_HALIGN,
-            ATTR_HREF,
-            ATTR_ID,
-            ATTR_SIZE,
-            ATTR_SRC,
-            ATTR_STYLE,
-            ATTR_TARGET,
-            ATTR_TITLE,
-            ATTR_VALIGN));
-
         ALL_ELEMENTS.addAll(Arrays.asList(
             A,
             ABBR,
@@ -694,6 +586,126 @@ public class TagDictionary {
             VAR,
             VIDEO,
             WBR));
+        BODY_CONTENT_ELEMENTS.addAll(ALL_ELEMENTS);
+        BODY_CONTENT_ELEMENTS.removeAll(Arrays.asList(
+            BASE,
+            BODY,
+            HEAD,
+            HTML,
+            TITLE,
+            LINK,
+            META));
+
+        HEADERS.add(H1);
+        HEADERS.add(H2);
+        HEADERS.add(H3);
+        HEADERS.add(H4);
+        HEADERS.add(H5);
+        HEADERS.add(H6);
+
+        BLOCK_ELEMENTS.addAll(HEADERS);
+        BLOCK_ELEMENTS.addAll(Arrays.asList(
+        // New (HTML5)
+            ARTICLE,
+            ASIDE,
+            DETAILS,
+            FIGCAPTION,
+            FIGURE,
+            FOOTER,
+            HEADER,
+            KEYGEN,
+            NAV,
+            OUTPUT,
+            SECTION,
+            SUMMARY,
+            // Old
+            BLOCKQUOTE,
+            DIV,
+            DL,
+            FIELDSET,
+            LEGEND,
+            HR,
+            IFRAME,
+            OL,
+            P,
+            PRE,
+            UL,
+            TABLE));
+
+        BLOCK_CONTAINER_ELEMENTS.addAll(Arrays.asList(
+        // New (HTML5)
+            FIGURE,
+            FOOTER,
+            HEADER,
+            NAV,
+            SECTION,
+            SUMMARY,
+            // Old
+            BLOCKQUOTE,
+            DIV,
+            DD,
+            FIELDSET,
+            LI,
+            PRE,
+            TD,
+            TH));
+
+        NON_CONTENT_ELEMENTS.addAll(Arrays.asList(
+            BUTTON,
+            FORM,
+            FRAME,
+            HEAD,
+            IFRAME,
+            INPUT,
+            OPTION,
+            SELECT,
+            SCRIPT,
+            STYLE,
+            TEXTAREA));
+        EMPTY_ELEMENTS.addAll(Arrays.asList(HR, IMG, BR));
+
+        INLINE_ELEMENTS.addAll(Arrays.asList(
+            A,
+            B,
+            BR,
+            EM,
+            STRONG,
+            I,
+            IMG,
+            SPAN,
+            SUB,
+            SUP,
+
+            /* HTML 5 */
+            AUDIO,
+            MARK,
+            PROGRESS,
+            RUBY, /* ? */
+            TIME,
+            TRACK,
+            VIDEO, /* ? */
+            WBR));
+
+        ALL_ATTRIBUTES.addAll(Arrays.asList(
+            ATTR_ALIGN,
+            ATTR_ALT,
+            ATTR_BACKGROUND,
+            ATTR_BGCOLOR,
+            ATTR_BORDER,
+            ATTR_CELLPADDING,
+            ATTR_CELLSPACING,
+            ATTR_CLASS,
+            ATTR_COLOR,
+            ATTR_FACE,
+            ATTR_HALIGN,
+            ATTR_HREF,
+            ATTR_ID,
+            ATTR_SIZE,
+            ATTR_SRC,
+            ATTR_STYLE,
+            ATTR_TARGET,
+            ATTR_TITLE,
+            ATTR_VALIGN));
 
         HTML5_ELEMENTS.addAll(Arrays.asList(
             ARTICLE,
@@ -746,6 +758,10 @@ public class TagDictionary {
 
     public static boolean isBlockElement(String name) {
         return BLOCK_ELEMENTS.contains(name);
+    }
+
+    public static boolean isBodyContent(String name) {
+        return BODY_CONTENT_ELEMENTS.contains(name);
     }
 
     public static boolean isContentElement(String name) {
