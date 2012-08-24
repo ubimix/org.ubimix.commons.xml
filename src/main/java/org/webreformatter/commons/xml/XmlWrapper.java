@@ -903,6 +903,11 @@ public class XmlWrapper {
      */
     private static XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
+    protected static Node adoptNode(Document doc, Node node) {
+        node = doc.importNode(node, true);
+        return node;
+    }
+
     /**
      * Appends the given node to the target element.
      * 
@@ -911,7 +916,7 @@ public class XmlWrapper {
      */
     protected static void append(Node target, Node node) {
         Document targetDoc = getDocument(target);
-        node = targetDoc.adoptNode(node);
+        node = adoptNode(targetDoc, node);
         target.appendChild(node);
     }
 
@@ -1175,9 +1180,8 @@ public class XmlWrapper {
      * @throws Exception
      */
     public static Document copyDocument(Document document) throws Exception {
-        Node n = document.getDocumentElement().cloneNode(true);
         Document result = newDocument();
-        result.adoptNode(n);
+        Node n = adoptNode(result, document.getDocumentElement());
         result.appendChild(n);
         return result;
     }
@@ -1192,9 +1196,8 @@ public class XmlWrapper {
      * @return a newly created copy of the given node.
      */
     public static Node copyNode(Element target, Node node) {
-        Node n = node.cloneNode(true);
         Document targetDoc = target.getOwnerDocument();
-        targetDoc.adoptNode(n);
+        Node n = adoptNode(targetDoc, node);
         target.appendChild(n);
         return node;
     }
@@ -1651,7 +1654,7 @@ public class XmlWrapper {
         Node root = getRootNode();
         Node child = xml.getRootNode();
         Document doc = root.getOwnerDocument();
-        child = doc.adoptNode(child);
+        child = doc.importNode(child, true);
         root.appendChild(child);
         T result = fContext.wrap(child, type);
         return result;
@@ -2437,7 +2440,7 @@ public class XmlWrapper {
         Node childNode = child.getRootNode();
         Node newChildNode = newChild.getRootNode();
         Document doc = root.getOwnerDocument();
-        newChildNode = doc.adoptNode(newChildNode);
+        newChildNode = adoptNode(doc, newChildNode);
         root.insertBefore(newChildNode, childNode);
         T result = fContext.wrap(newChildNode, type);
         return result;
