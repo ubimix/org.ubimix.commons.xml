@@ -9,15 +9,15 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.webreformatter.commons.xml.atom;
+package org.ubimix.commons.xml.atom;
 
 import java.io.StringReader;
 
 import junit.framework.TestCase;
 
 import org.w3c.dom.Document;
-import org.webreformatter.commons.xml.XmlWrapper;
-import org.webreformatter.commons.xml.atom.AtomFeed;
+import org.ubimix.commons.xml.XmlWrapper;
+import org.ubimix.commons.xml.atom.AtomFeed;
 
 public class JSonFeedSerializerTest extends TestCase {
 

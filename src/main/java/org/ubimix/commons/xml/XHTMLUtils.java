@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.webreformatter.commons.xml;
+package org.ubimix.commons.xml;
 
 import org.w3c.dom.Node;
 

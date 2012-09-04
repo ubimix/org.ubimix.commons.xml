@@ -9,17 +9,17 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.webreformatter.commons.xml.atom;
+package org.ubimix.commons.xml.atom;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.webreformatter.commons.xml.atom.AtomCategory;
-import org.webreformatter.commons.xml.atom.AtomEntry;
-import org.webreformatter.commons.xml.atom.AtomFeed;
-import org.webreformatter.commons.xml.atom.AtomItem;
-import org.webreformatter.commons.xml.atom.AtomPerson;
+import org.ubimix.commons.xml.atom.AtomCategory;
+import org.ubimix.commons.xml.atom.AtomEntry;
+import org.ubimix.commons.xml.atom.AtomFeed;
+import org.ubimix.commons.xml.atom.AtomItem;
+import org.ubimix.commons.xml.atom.AtomPerson;
 
 /**
  * @author kotelnikov

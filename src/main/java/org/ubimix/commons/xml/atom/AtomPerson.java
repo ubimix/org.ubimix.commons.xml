@@ -9,11 +9,11 @@
  * KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.webreformatter.commons.xml.atom;
+package org.ubimix.commons.xml.atom;
 
 import org.w3c.dom.Node;
-import org.webreformatter.commons.xml.XmlException;
-import org.webreformatter.commons.xml.XmlWrapper;
+import org.ubimix.commons.xml.XmlException;
+import org.ubimix.commons.xml.XmlWrapper;
 
 /**
  * @author kotelnikov

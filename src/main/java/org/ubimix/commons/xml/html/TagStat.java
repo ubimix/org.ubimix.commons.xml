@@ -1,4 +1,4 @@
-package org.webreformatter.commons.xml.html;
+package org.ubimix.commons.xml.html;
 
 /**
  * @author kotelnikov

@@ -1,15 +1,15 @@
 /**
  * 
  */
-package org.webreformatter.commons.xml.html;
+package org.ubimix.commons.xml.html;
 
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.webreformatter.commons.xml.XmlException;
-import org.webreformatter.commons.xml.XmlWrapper;
-import org.webreformatter.commons.xml.XmlWrapper.XmlContext;
+import org.ubimix.commons.xml.XmlException;
+import org.ubimix.commons.xml.XmlWrapper;
+import org.ubimix.commons.xml.XmlWrapper.XmlContext;
 
 /**
  * @author kotelnikov

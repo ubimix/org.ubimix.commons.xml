@@ -1,16 +1,16 @@
 /**
  * 
  */
-package org.webreformatter.commons.xml.html;
+package org.ubimix.commons.xml.html;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.webreformatter.commons.xml.XmlException;
-import org.webreformatter.commons.xml.XmlWrapper;
-import org.webreformatter.commons.xml.XmlWrapper.XmlContext;
-import org.webreformatter.commons.xml.html.HtmlBurner;
+import org.ubimix.commons.xml.XmlException;
+import org.ubimix.commons.xml.XmlWrapper;
+import org.ubimix.commons.xml.XmlWrapper.XmlContext;
+import org.ubimix.commons.xml.html.HtmlBurner;
 
 /**
  * @author kotelnikov

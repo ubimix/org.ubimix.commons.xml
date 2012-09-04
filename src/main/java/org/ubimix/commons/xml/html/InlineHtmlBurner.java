@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.webreformatter.commons.xml.html;
+package org.ubimix.commons.xml.html;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
-import org.webreformatter.commons.xml.XHTMLUtils;
+import org.ubimix.commons.xml.XHTMLUtils;
 
 /**
  * @author kotelnikov

@@ -1,4 +1,4 @@
-package org.webreformatter.commons.xml.atom;
+package org.ubimix.commons.xml.atom;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

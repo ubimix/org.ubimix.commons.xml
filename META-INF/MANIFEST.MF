@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ClassPath: .
-Bundle-SymbolicName: org.webreformatter.commons.xml
-Bundle-Name: org.webreformatter.commons.xml
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Version: 1.1.5
+Bundle-SymbolicName: org.ubimix.commons.xml
+Bundle-Name: org.ubimix.commons.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Version: 1.2.1
 Bundle-ManifestVersion: 2
 Bundle-Description: XML Utilities Library
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
-Export-Package: org.webreformatter.commons.xml;version="1.1.5",
- org.webreformatter.commons.xml.atom;version="1.1.5",
- org.webreformatter.commons.xml.html;version="1.1.5"
+Export-Package: org.ubimix.commons.xml;version="1.2.1",
+ org.ubimix.commons.xml.atom;version="1.2.1",
+ org.ubimix.commons.xml.html;version="1.2.1"

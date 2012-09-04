@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.webreformatter.commons.xml;
+package org.ubimix.commons.xml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
