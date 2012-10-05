@@ -92,6 +92,10 @@ public class HtmlBurnerTest extends TestCase {
             + "<p><img src='./myimage.gif' /></p>"
             + "</html>");
 
+        // testTag(
+        // "<div id=\"main-content\" class=\"wiki-content\"><h3 >Title</h3><ul><li class=\"item\">Item 1</li><li class=\"item\">Item 2</li><ul><li class=\"iitem\">IItem 1</li><li class=\"iitem\">IItem 2</li></ul><li>Item 3</li></ul></div>",
+        // "<div><h3>Title</h3><ul><li>Item 1</li><li>Item 2</li><ul><li>IItem 1</li><li>IItem 2</li></ul><li>Item 3</li></ul></div>");
+
         testTag("<div><p> </p></div>", "<div></div>");
         testTag("<div> This is a message<br />   \n"
             + "  <abc> \n  Toto \n  </abc>"
