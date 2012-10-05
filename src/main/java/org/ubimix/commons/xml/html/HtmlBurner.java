@@ -96,10 +96,13 @@ public class HtmlBurner extends InlineHtmlBurner {
                             }
                         } else if (TagDictionary.isList(childName)
                             || TagDictionary.isListItem(childName)) {
+                            childName = TagDictionary.isList(childName)
+                                ? TagDictionary.DIV
+                                : childName;
                             childTag = checkBlockTags(
                                 childTag,
                                 childStat,
-                                TagDictionary.DIV);
+                                childName);
                             if (childTag != null) {
                                 result.add(childTag);
                             }

@@ -23,7 +23,51 @@ public class HtmlBurnerTest extends TestCase {
         super(name);
     }
 
-    public void test() throws Exception {
+    public void test() throws XmlException, IOException {
+        testTag("<ol><li>X<ul><li>A</li></ul></li></ol>", ""
+            + "<ol>\n"
+            + "    <li>\n"
+            + "        <p>X</p>\n"
+            + "        <ul>\n"
+            + "            <li>A</li>\n"
+            + "        </ul>\n"
+            + "    </li>\n"
+            + "</ol>\n"
+            + "");
+
+        testTag("<div><ol></ol></div>", "<div></div>");
+        testTag("<div><ol><li/></ol></div>", "<div></div>");
+
+    }
+
+    public void testLineBreaks() throws XmlException, IOException {
+        testTag("<div><p> <br /> </p></div>", "<div></div>");
+    }
+
+    public void testMore() throws XmlException, IOException {
+        testTag("<div>\n"
+            + " A "
+            + "<span style=\"font-weight: bold;\">B</span>"
+            + " C "
+            + "<a href=\"http://foo.bar/titi/toto\">E</a>\n"
+            + " <br/>\n"
+            + " <img align=\"middle\" alt=\"X\" "
+            + "       src=\"http://foo.bar/photo/myphoto.jpg\" "
+            + "       style=\"width: 203px;  margin: 5px;\" title=\"X\"/>\n"
+            + " <br/>F\n"
+            + "</div>", ""
+            + "<div>"
+            + "<p> A B C "
+            + "<a href=\"http://foo.bar/titi/toto\">E</a> "
+            + "<br/> "
+            + "<img src=\"http://foo.bar/photo/myphoto.jpg\" "
+            + "title=\"X\"/> "
+            + "<br/>F </p>\n"
+            + "</div>"
+            + "");
+    }
+
+    public void testOthers() throws Exception {
         testTag("<html><head><title>Test</title></head><body>"
             + "<p>First paragraph</p>"
             + "<img src='./myimage.gif' />"
@@ -73,33 +117,6 @@ public class HtmlBurnerTest extends TestCase {
             + "<div><div><div>A</div></div></div>"
             + "<div><div><div>B</div></div></div>"
             + "</div>", "<div><p>A</p><p>B</p></div>");
-    }
-
-    public void testLineBreaks() throws XmlException, IOException {
-        testTag("<div><p> <br /> </p></div>", "<div></div>");
-    }
-
-    public void testMore() throws XmlException, IOException {
-        testTag("<div>\n"
-            + " A "
-            + "<span style=\"font-weight: bold;\">B</span>"
-            + " C "
-            + "<a href=\"http://foo.bar/titi/toto\">E</a>\n"
-            + " <br/>\n"
-            + " <img align=\"middle\" alt=\"X\" "
-            + "       src=\"http://foo.bar/photo/myphoto.jpg\" "
-            + "       style=\"width: 203px;  margin: 5px;\" title=\"X\"/>\n"
-            + " <br/>F\n"
-            + "</div>", ""
-            + "<div>"
-            + "<p> A B C "
-            + "<a href=\"http://foo.bar/titi/toto\">E</a> "
-            + "<br/> "
-            + "<img src=\"http://foo.bar/photo/myphoto.jpg\" "
-            + "title=\"X\"/> "
-            + "<br/>F </p>\n"
-            + "</div>"
-            + "");
     }
 
     public void testTables() throws XmlException, IOException {
