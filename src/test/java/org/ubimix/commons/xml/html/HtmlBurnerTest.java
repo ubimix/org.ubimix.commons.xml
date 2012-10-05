@@ -23,12 +23,11 @@ public class HtmlBurnerTest extends TestCase {
         super(name);
     }
 
-    public void test() throws XmlException, IOException {
-        // FIXME: this does not work
-        // testTag(
-        // "<div><ol>before <li>X</li> after</ol></div>",
-        // "<div><ol><li>before</li><li>X</li><li>after</li></ol></div>");
+    public void testLineBreaks() throws XmlException, IOException {
+        testTag("<div><p> <br /> </p></div>", "<div></div>");
+    }
 
+    public void testLists() throws XmlException, IOException {
         testTag("<div><ol><li/></ol></div>", "<div></div>");
         testTag("<ol><li/></ol>", "<ol></ol>");
         testTag(
@@ -54,8 +53,28 @@ public class HtmlBurnerTest extends TestCase {
 
     }
 
-    public void testLineBreaks() throws XmlException, IOException {
-        testTag("<div><p> <br /> </p></div>", "<div></div>");
+    public void testListsBroken() throws XmlException, IOException {
+        // FIXME: should produce:
+        // "<div><ol><li>before</li><li>X</li><li>after</li></ol></div>"
+        testTag(
+            "<div><ol>before <li>X</li> after</ol></div>",
+            "<div><div><p>before </p><li>X</li><p> after</p></div></div>\n");
+        // FIXME: Should produce:
+        // "<div><h3>Title</h3><ul><li>Item 1</li><li>Item 2<ul><li>IItem 1</li><li>IItem 2</li></ul></li><li>Item 3</li></ul></div>"
+        testTag(
+            "<div id=\"main-content\" class=\"wiki-content\"><h3 >Title</h3><ul><li class=\"item\">Item 1</li><li class=\"item\">Item 2</li><ul><li class=\"iitem\">IItem 1</li><li class=\"iitem\">IItem 2</li></ul><li>Item 3</li></ul></div>",
+            "" + "<div>\n" + "    <h3>Title</h3>\n" + "    <div>\n" // Should be
+                                                                    // <ul>
+                + "        <li>Item 1</li>\n"
+                + "        <li>Item 2</li>\n"
+                + "        <ul>\n" // Should be inside of the previous <li> elm
+                + "            <li>IItem 1</li>\n"
+                + "            <li>IItem 2</li>\n"
+                + "        </ul>\n"
+                + "        <li>Item 3</li>\n"
+                + "    </div>\n" // Should be </ul>
+                + "</div>");
+
     }
 
     public void testMore() throws XmlException, IOException {
@@ -91,10 +110,6 @@ public class HtmlBurnerTest extends TestCase {
             + "<p>First paragraph</p>"
             + "<p><img src='./myimage.gif' /></p>"
             + "</html>");
-
-        // testTag(
-        // "<div id=\"main-content\" class=\"wiki-content\"><h3 >Title</h3><ul><li class=\"item\">Item 1</li><li class=\"item\">Item 2</li><ul><li class=\"iitem\">IItem 1</li><li class=\"iitem\">IItem 2</li></ul><li>Item 3</li></ul></div>",
-        // "<div><h3>Title</h3><ul><li>Item 1</li><li>Item 2</li><ul><li>IItem 1</li><li>IItem 2</li></ul><li>Item 3</li></ul></div>");
 
         testTag("<div><p> </p></div>", "<div></div>");
         testTag("<div> This is a message<br />   \n"
