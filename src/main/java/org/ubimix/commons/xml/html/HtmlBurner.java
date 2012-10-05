@@ -94,15 +94,25 @@ public class HtmlBurner extends InlineHtmlBurner {
                             if (childTag != null) {
                                 result.add(childTag);
                             }
-                        } else if (TagDictionary.isList(childName)
-                            || TagDictionary.isListItem(childName)) {
-                            childName = TagDictionary.isList(childName)
-                                ? TagDictionary.DIV
-                                : childName;
+                        } else if (TagDictionary.isList(childName)) {
                             childTag = checkBlockTags(
                                 childTag,
                                 childStat,
-                                childName);
+                                TagDictionary.DIV);
+                            if (childTag != null) {
+                                result.add(childTag);
+                            }
+                        } else if (TagDictionary.isListItem(childName)) {
+                            String tagName = getHtmlName(tag);
+                            if (childStat.getAllMeaningfulNodes() > 0) {
+                                if (!TagDictionary.isList(tagName)) {
+                                    childTag = moveToNewTag(
+                                        childTag,
+                                        TagDictionary.DIV);
+                                }
+                            } else {
+                                childTag = null;
+                            }
                             if (childTag != null) {
                                 result.add(childTag);
                             }
@@ -154,22 +164,25 @@ public class HtmlBurner extends InlineHtmlBurner {
         Element tag,
         TagStat tagStat,
         String newTagName) {
-        String childName = getHtmlName(tag);
+        String tagName = getHtmlName(tag);
         Element result = null;
-        if (TagDictionary.isEmptyElement(childName)
-            || tagStat.getAllMeaningfulNodes() > 0) {
-            if (TagDictionary.isEmptyElement(childName)
+        int meaningfulNodeCount = tagStat.getAllMeaningfulNodes();
+        if (TagDictionary.isEmptyElement(tagName) || meaningfulNodeCount > 0) {
+            if (TagDictionary.isEmptyElement(tagName)
                 || tagStat.getBlockElements() == 0) {
                 result = tag;
-            } else {
-                Element newParent = newHtmlElement(tag, newTagName);
+            } else if (meaningfulNodeCount == 1) {
                 Node child = tag.getFirstChild();
                 while (child != null) {
-                    Node nextChild = child.getNextSibling();
-                    newParent.appendChild(child);
-                    child = nextChild;
+                    if (child instanceof Element) {
+                        result = (Element) child;
+                        break;
+                    }
+                    child = child.getNextSibling();
                 }
-                result = newParent;
+            }
+            if (result == null) {
+                result = moveToNewTag(tag, newTagName);
             }
         }
         return result;
@@ -262,6 +275,17 @@ public class HtmlBurner extends InlineHtmlBurner {
 
     protected boolean keepIntact(String name, Element element) {
         return false;
+    }
+
+    protected Element moveToNewTag(Element tag, String tagName) {
+        Element result = newHtmlElement(tag, tagName);
+        Node child = tag.getFirstChild();
+        while (child != null) {
+            Node nextChild = child.getNextSibling();
+            result.appendChild(child);
+            child = nextChild;
+        }
+        return result;
     }
 
 }

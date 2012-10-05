@@ -24,19 +24,33 @@ public class HtmlBurnerTest extends TestCase {
     }
 
     public void test() throws XmlException, IOException {
-        testTag("<ol><li>X<ul><li>A</li></ul></li></ol>", ""
-            + "<ol>\n"
-            + "    <li>\n"
-            + "        <p>X</p>\n"
-            + "        <ul>\n"
-            + "            <li>A</li>\n"
-            + "        </ul>\n"
-            + "    </li>\n"
-            + "</ol>\n"
-            + "");
+        // FIXME: this does not work
+        // testTag(
+        // "<div><ol>before <li>X</li> after</ol></div>",
+        // "<div><ol><li>before</li><li>X</li><li>after</li></ol></div>");
 
-        testTag("<div><ol></ol></div>", "<div></div>");
         testTag("<div><ol><li/></ol></div>", "<div></div>");
+        testTag("<ol><li/></ol>", "<ol></ol>");
+        testTag(
+            "<div><ol>before <li/> after</ol></div>",
+            "<div><p>before after</p></div>");
+        testTag(
+            "<ol><li>X<li>A</li>Y</li></ol>",
+            "<ol><li><p>X</p><div>A</div><p>Y</p></li></ol>");
+        testTag("<div><ol>xxx</ol></div>", "<div><p>xxx</p></div>");
+        testTag(
+            "<div><ol><li>xxx</li></ol></div>",
+            "<div><ol><li>xxx</li></ol></div>");
+        testTag("<ol><li>xxx</li></ol>", "<ol><li>xxx</li></ol>");
+        testTag("<div><ol></ol></div>", "<div></div>");
+        testTag("<div><div><p>xxx</p></div></div>", "<div><p>xxx</p></div>");
+
+        testTag(
+            "<ol><li>X<ul><li>A</li></ul></li></ol>",
+            "<ol><li><p>X</p><ul><li>A</li></ul></li></ol>");
+        testTag(
+            "<ol><li>X<ul><li>A</li></ul>Y</li></ol>",
+            "<ol><li><p>X</p><ul><li>A</li></ul><p>Y</p></li></ol>");
 
     }
 
